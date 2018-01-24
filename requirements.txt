@@ -1,0 +1,3 @@
+newspaper3k
+TextBlob
+Scrapy-py3
