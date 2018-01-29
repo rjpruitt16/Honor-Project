@@ -17,10 +17,12 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, lik
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'ArticleScrapyv2 (+http://www.yourdomain.com)'
-DEPTH_LIMIT = 10
+DEPTH_LIMIT = 1
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
+DOWNLOAD_DELAY = 3
+CLOSESPIDER_ITEMCOUNT = 15
 
 ITEM_PIPELINES = {
     'ArticleScrapyv2.pipelines.DropNullItemPipeline' : 299,
