@@ -1,11 +1,12 @@
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor
 from ArticleScrapyv2.items import NewsArticleItem
-from scrapy.crawler import CrawlerProcess
+from scrapy.exceptions import DropItem, CloseSpider
 
 class NYTSentimentSpider(CrawlSpider):
-    name = "NYT"
+    name = "NYT_race_politic"
     allowed_domains = ["nytimes.com"]
+
     start_urls = [
         "https://www.nytimes.com/",
         "https://www.nytimes.com/section/politics",
@@ -35,13 +36,15 @@ class NYTSentimentSpider(CrawlSpider):
 
             yield item
 
+
+
 class CNNSentimentSpider(CrawlSpider):
-    name = "CNN"
+    name = "CNN_race_politic"
     allowed_domains = ["cnn.com"]
     start_urls = [
         "https://www.cnn.com/",
         "https://www.cnn.com/politics",
-        "https://www.nytimes.com/topic/subject/race-and-ethnicity"
+        "https://www.cnn.com/specials/us/raceandreality"
     ]
 
     rules = (
@@ -68,7 +71,7 @@ class CNNSentimentSpider(CrawlSpider):
             yield item
 
 class NPRSentimentSpider(CrawlSpider):
-    name = "NPR"
+    name = "NPR_race_politic"
     allowed_domains = ["npr.org"]
     start_urls = [
         "https://www.npr.org/",
@@ -98,10 +101,3 @@ class NPRSentimentSpider(CrawlSpider):
             item["url"] = article.xpath(self.xpath_dict["url"]).extract_first()
 
             yield item
-
-
-process = CrawlerProcess({
-    'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
-})
-process.crawl(NYTSentimentSpider)
-process.start()

@@ -13,7 +13,7 @@ BOT_NAME = 'ArticleScrapyv2'
 
 SPIDER_MODULES = ['ArticleScrapyv2.spiders']
 NEWSPIDER_MODULE = 'ArticleScrapyv2.spiders'
-USER_AGENT = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.93 Safari/537.36"
+USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'ArticleScrapyv2 (+http://www.yourdomain.com)'
@@ -22,13 +22,19 @@ DEPTH_LIMIT = 1
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 DOWNLOAD_DELAY = 3
-CLOSESPIDER_ITEMCOUNT = 15
+
 
 ITEM_PIPELINES = {
     'ArticleScrapyv2.pipelines.DropNullItemPipeline' : 299,
     'ArticleScrapyv2.pipelines.NewspaperTextExtractionPipeline' : 300,
     'ArticleScrapyv2.pipelines.SentimentPipeline' : 301,
+    'ArticleScrapyv2.pipelines.JsonWriterPipeline' : 302,
 }
+
+EXTENSIONS = {
+    'scrapy.extensions.closespider.CloseSpider': 1,
+}
+
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32

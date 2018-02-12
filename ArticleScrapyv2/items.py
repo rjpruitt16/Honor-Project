@@ -13,6 +13,7 @@ class NewsArticleItem(scrapy.Item):
     # name = scrapy.Field()
     title = scrapy.Field()
     url = scrapy.Field()
-    sentiment = scrapy.Field()
+    polarity = scrapy.Field()
+    subjectivity = scrapy.Field()
     text = scrapy.Field()
     keywords = scrapy.Field()
