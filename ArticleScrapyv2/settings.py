@@ -17,7 +17,7 @@ USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'ArticleScrapyv2 (+http://www.yourdomain.com)'
-DEPTH_LIMIT = 1
+DEPTH_LIMIT = 2
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True

@@ -3,24 +3,28 @@ import os
 import operator
 
 def GetNameOfJSON():
-    NewsToFilesDict = {}
+    categoryToFilesDict = {}
+    categoryToFilesDict["article"] = []
+    categoryToFilesDict["race"] = []
     for filename in os.listdir("."):
         if filename.endswith(".json"):
-            if filename.split("_")[0] not in NewsToFilesDict.keys():
-                NewsToFilesDict[filename.split("_")[0]] = [filename]
-            else:
-                NewsToFilesDict[filename.split("_")[0]].append(filename)
-    return NewsToFilesDict
+            if filename.split("_")[0] not in categoryToFilesDict.keys():
+                categoryToFilesDict[filename.split("_")[0]] = [filename]
+            if filename.split("_")[1] == "article":
+                categoryToFilesDict["article"].append(filename)
+            if filename.split("_")[1] == "race":
+                categoryToFilesDict["race"].append(filename)
+            categoryToFilesDict[filename.split("_")[0]].append(filename)
+    return categoryToFilesDict
 
 def ScoreKeywordPolarity(keywordDict, jdata):
-    for word in jdata["keywords"]:
-        if word not in keywordDict.keys():
-            keywordDict[word] = 0
-        if jdata["polarity"] < -.3:
-            print("negative article")
-            keywordDict[word] = keywordDict[word] - 1
-        elif jdata["polarity"] > .3:
-            keywordDict[word] = keywordDict[word] + 1
+        for word in jdata["keywords"]:
+            if word not in keywordDict.keys():
+                keywordDict[word] = 0
+            if jdata["polarity"] < -.3:
+                keywordDict[word] = keywordDict[word] - 1
+            elif jdata["polarity"] > .3:
+                keywordDict[word] = keywordDict[word] + 1
 
 def LoadAndGetJSONS(jfiles):
     jsons = []
@@ -49,11 +53,11 @@ def GetPositveOrNegativeArticles(jsons, positive=True):
                 articles.append(jdata)
     return articles
 
-def GetAveragePolarity(jsons, sentiment="polarity"):
-    total = 0
+def GetAveragePolarityOrSubjectivity(jsons, key="polarity"):
+    average = 0
     for jdata in jsons:
-        total+=jdata[sentiment]
-    return total/len(jsons)
+        average+=jdata[key]
+    return average/len(jsons)
 
 def PrintAnalysis():
     '''
@@ -61,15 +65,16 @@ def PrintAnalysis():
     least favorite keywords. Print the amount of positve negative articles
     in general, and the positive to negative with rave politics
     '''
-    NewsToFilesDict = GetNameOfJSON()
-    for key in NewsToFilesDict.keys():
-        jsons = LoadAndGetJSONS(NewsToFilesDict[key])
-        print(key, " Total Article: ", len(jsons))
-        print(key, " Average Polarity: ", GetAveragePolarity(jsons))
-        print(key, " Average Subjectivity: ", GetAveragePolarity(jsons, "subjectivity"))
+    CategoryDict = GetNameOfJSON()
+    for category in CategoryDict.keys():
+        jsons = LoadAndGetJSONS(CategoryDict[category])
+        print(category, "Articles: ", len(jsons))
+        print(category, "Average Polarity ", GetAveragePolarityOrSubjectivity(jsons))
+        print(category, "Average Subjectivity", GetAveragePolarityOrSubjectivity(jsons, "subjectivity"))
         keywords = GetPolarityOfKeyword(jsons)
-        print(key, " Top 5 positive words: ", str(keywords[:5]))
-        print(key, " Top 5 negative words: ", str(keywords[len(keywords)-5:]))
+        print(category, "Top Five Positive Keywords ", keywords[len(keywords)-5:])
+        print(category, "Top Five Negative Keywords ", keywords[:5])
+
 
 if __name__ ==  "__main__":
     PrintAnalysis()
