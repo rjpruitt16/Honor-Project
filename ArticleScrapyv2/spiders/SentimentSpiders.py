@@ -70,6 +70,38 @@ class CNNSentimentSpider(CrawlSpider):
 
             yield item
 
+class FoxNewsArticleSpider(CrawlSpider):
+    ## TODO update xpath. Not Scraping properly
+    name = "Fox_race_politic"
+    allowed_domains = ["foxnews.com"]
+    start_urls = [
+        "http://www.foxnews.com/",
+    ]
+
+    rules = (
+       Rule(LinkExtractor(allow=r"politics"), callback="parse_item", follow=True),
+       Rule(LinkExtractor(allow=r"race"), callback="parse_item", follow=True),
+    )
+
+    xpath_dict = {
+        'articles' : '//article',
+        'title' : 'div[@class="info"]/header/h2/a/text()',
+        'url'   : 'div[@class="info"]/header/h2/a/@href'
+    }
+
+    def parse_item(self, response):
+        self.log("Scraping: " + response.url)
+
+        articles = response.xpath(self.xpath_dict["articles"])
+
+        for article in articles:
+            item = NewsArticleItem()
+            item["title"] = article.xpath(self.xpath_dict["title"]).extract_first()
+            item["url"] = article.xpath(self.xpath_dict["url"]).extract_first()
+
+            yield item
+
+
 class NPRSentimentSpider(CrawlSpider):
     name = "NPR_race_politic"
     allowed_domains = ["npr.org"]

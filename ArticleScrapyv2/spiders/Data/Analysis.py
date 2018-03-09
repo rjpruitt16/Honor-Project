@@ -36,6 +36,12 @@ def LoadAndGetJSONS(jfiles):
             print(filename + ": unable to load")
     return jsons
 
+def RememoveDepulicateArticle(jsons):
+    jset = set(list(jsons)
+    return set(jsons) - jset
+
+
+
 def GetPolarityOfKeyword(jsons):
     keywordDict = {}
     for jdata in jsons:
@@ -68,12 +74,13 @@ def PrintAnalysis():
     CategoryDict = GetNameOfJSON()
     for category in CategoryDict.keys():
         jsons = LoadAndGetJSONS(CategoryDict[category])
+        print(type(jsons))
         print(category, "Articles: ", len(jsons))
         print(category, "Average Polarity ", GetAveragePolarityOrSubjectivity(jsons))
         print(category, "Average Subjectivity", GetAveragePolarityOrSubjectivity(jsons, "subjectivity"))
         keywords = GetPolarityOfKeyword(jsons)
-        print(category, "Top Five Positive Keywords ", keywords[len(keywords)-5:])
-        print(category, "Top Five Negative Keywords ", keywords[:5])
+        print(category, "Top Fifteen Positive Keywords ", keywords[len(keywords)-15:])
+        print(category, "Top Five Negative Keywords ", keywords[:15])
 
 
 if __name__ ==  "__main__":
