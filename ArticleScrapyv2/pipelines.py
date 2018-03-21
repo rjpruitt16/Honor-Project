@@ -50,8 +50,7 @@ class JsonWriterPipeline(object):
     def close_spider(self, spider):
         for line in self.lines[:len(self.lines)-1]:
             self.jfile.write(line + ",\n")
-        self.jfile.write(self.lines[-1]+ "\n")
-        self.jfile.write("]")
+        self.jfile.write(self.lines[-1]+ "\n]")
         self.jfile.close()
 
     def process_item(self, item, spider):
