@@ -1,6 +1,8 @@
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor
 from ArticleScrapyv2.items import NewsArticleItem
+from re import search
+
 import logging
 
 class NYTArticleSpider(CrawlSpider):
@@ -116,9 +118,9 @@ class FoxNewsArticleSpider(CrawlSpider):
             item = NewsArticleItem()
             item["title"] = article.xpath(self.xpath_dict["title"]).extract_first()
             item["url"] = article.xpath(self.xpath_dict["url"]).extract_first()
-            if item["url"]:
-                item["url"] = item["url"].split("//")[1]
-                yield item
+            if item["url"] and search("^//", item["url"]):
+                item["url"] = item["url"][2:]
+            yield item
 
 class DrudgeNewsArticleSpider(CrawlSpider):
     name = "Drudge_article"
@@ -146,8 +148,15 @@ class DrudgeNewsArticleSpider(CrawlSpider):
             item = NewsArticleItem()
             item["title"] = article.xpath(self.xpath_dict["title"]).extract_first()
             item["url"] = article.xpath(self.xpath_dict["url"]).extract_first()
-
             yield item
+
+    def parse_details(self, response):
+        item = response.meta.get('item', None)
+        if item:
+        # populate more `item` fields
+            return item
+        else:
+            inspect_response(response, self)
 
 class TheRootSpider(CrawlSpider):
     name = "Root_article"

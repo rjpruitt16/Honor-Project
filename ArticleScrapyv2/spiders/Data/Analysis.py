@@ -82,12 +82,10 @@ def MakeJSONAnalysisFile(jsons, filename):
     filename = filename+"_"+str(datetime.now()).split(" ")[0]+".json"
     with open(filename, 'w') as jfile:
         jfile.write("[\n")
-        for jdata in jsons:
-            ## TODO Find out why std_subjectivity does not write to file
-            ## print(jdata["std_mode_subjectivity"])
-            print(json.dump(jdata, jfile))
+        for jdata in jsons[:len(jsons)-1]:
+            json.dump(jdata, jfile)
             jfile.write(",\n")
-        #json.dump(jsons[-1], jfile)
+        json.dump(jsons[-1], jfile)
         jfile.write("\n]")
 
 

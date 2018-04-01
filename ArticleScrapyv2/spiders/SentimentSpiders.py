@@ -2,6 +2,8 @@ from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors import LinkExtractor
 from ArticleScrapyv2.items import NewsArticleItem
 from scrapy.exceptions import DropItem, CloseSpider
+from scrapy.shell import inspect_response
+from re import search
 
 class NYTSentimentSpider(CrawlSpider):
     name = "NYT_race_politic"
@@ -71,7 +73,6 @@ class CNNSentimentSpider(CrawlSpider):
             yield item
 
 class FoxNewsArticleSpider(CrawlSpider):
-    ## TODO update xpath. Not Scraping properly
     name = "Fox_race_politic"
     allowed_domains = ["foxnews.com"]
     start_urls = [
@@ -99,6 +100,8 @@ class FoxNewsArticleSpider(CrawlSpider):
             item["title"] = article.xpath(self.xpath_dict["title"]).extract_first()
             item["url"] = article.xpath(self.xpath_dict["url"]).extract_first()
 
+            if item["url"] and search("^//", item["url"]):
+                item["url"] = item["url"][2:]
             yield item
 
 
